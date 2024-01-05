@@ -4,8 +4,8 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="tab1" href="/tabs/tab1">
-          <ion-icon aria-hidden="true" :icon="logoOctocat" />
-          <ion-label>Gatti</ion-label>
+          <ion-icon aria-hidden="true" :icon="flameOutline" />
+          <ion-label>HOT</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab2" href="/tabs/tab2">
@@ -24,5 +24,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { appsOutline, diceOutline, logoOctocat } from 'ionicons/icons';
+import { flameOutline, appsOutline, diceOutline } from 'ionicons/icons';
 </script>
