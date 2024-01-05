@@ -2,8 +2,8 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>🐱‍👤 Gatti</ion-title>
-        <ion-buttons slot="secondary">
+        <ion-title>😼 Gatti</ion-title>
+        <ion-buttons slot="end">
           <ion-button @click="changeColSize()">
             <ion-icon slot="icon-only" :icon="gridOutline"></ion-icon>
           </ion-button>
@@ -11,11 +11,6 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">🐱‍👤 Gatti</ion-title>
-        </ion-toolbar>
-      </ion-header>
       <ion-grid>
         <ion-row>
           <ion-col :size="size" size-sm="6" size-md="4" size-lg="3" v-for="item in cats" :key="item.id">
@@ -36,6 +31,7 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+      <ion-button fill="outline">Outline</ion-button>
     </ion-content>
   </ion-page>
 </template>
