@@ -24,5 +24,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { appsOutline, diceOutline, logoOctocat, ellipse, square, person } from 'ionicons/icons';
+import { appsOutline, diceOutline, logoOctocat } from 'ionicons/icons';
 </script>

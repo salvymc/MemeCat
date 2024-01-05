@@ -3,17 +3,22 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>🐱‍👤 Gatti</ion-title>
+        <ion-buttons slot="secondary">
+          <ion-button @click="changeColSize()">
+            <ion-icon slot="icon-only" :icon="gridOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Gatti</ion-title>
+          <ion-title size="large">🐱‍👤 Gatti</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-grid>
         <ion-row>
-          <ion-col size="6" size-md="4" size-lg="3" v-for="item in cats" :key="item.id">
+          <ion-col :size="size" size-sm="6" size-md="4" size-lg="3" v-for="item in cats" :key="item.id">
             <ion-card>
               <img alt="" :src="'https://cataas.com/cat/' + item._id" />
               <ion-card-header>
@@ -36,10 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue';
-import { IonChip, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { onMounted, ref } from 'vue';
+import { IonButton, IonButtons, IonIcon, IonChip, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { gridOutline } from 'ionicons/icons';
 
 let cats = ref<any>(null);
+let size = ref<string>("12");
 
 async function fetchData() {
   const response = await fetch('https://cataas.com/api/cats?skip=0&limit=12');
@@ -47,7 +54,23 @@ async function fetchData() {
   cats.value = data;
 }
 
+function changeColSize() {
+  size.value = (size.value === "12") ? "6" : "12";
+}
+
 onMounted(() => {
   fetchData();
 })
 </script>
+
+<style>
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  margin: 5px;
+  background-color: #999;
+  -webkit-border-radius: 5px;
+}
+</style>
