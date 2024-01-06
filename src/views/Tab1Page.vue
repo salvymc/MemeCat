@@ -14,11 +14,11 @@
       <ion-grid v-if="cats">
         <ion-row>
           <ion-col :size="size" size-sm="6" size-md="4" size-lg="3" v-for="item in cats['data']" :key="item.id">
-            <ion-card>
-              <img style="width: 100%;" :src="item['images']['fixed_height']['url']" />
+            <ion-card style="width: 100%; margin:0px; height: 100%;">
+              <img style="width: 100%;" :src="item['images']['fixed_width']['url']" />
               <ion-card-header>
-                <ion-card-title>{{ item.username }}</ion-card-title>
-                <ion-card-subtitle>{{ item.title }}</ion-card-subtitle>
+                <ion-card-title>{{ item.username || 'MemeCat' }}</ion-card-title>
+                <ion-card-subtitle>{{ item.title || 'MemeCat' }}</ion-card-subtitle>
               </ion-card-header>
             </ion-card>
           </ion-col>
