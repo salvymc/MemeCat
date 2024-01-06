@@ -5,7 +5,7 @@
         <ion-title>🚀 MemeLand</ion-title>
         <ion-buttons slot="end">
           <ion-button @click="changeColSize()">
-            <ion-icon slot="icon-only" :icon="gridOutline"></ion-icon>
+            <ion-icon slot="icon-only" :icon="size === '12' ? gridOutline : squareOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -15,7 +15,7 @@
         <ion-row>
           <ion-col :size="size" size-sm="6" size-md="4" size-lg="3" v-for="item in cats['data']" :key="item.id">
             <ion-card>
-              <img alt="" :src="item['images']['fixed_height']['url']" />
+              <img style="width: 100%;" :src="item['images']['fixed_height']['url']" />
               <ion-card-header>
                 <ion-card-title>{{ item.username }}</ion-card-title>
                 <ion-card-subtitle>{{ item.title }}</ion-card-subtitle>
@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonItem, IonSpinner, IonButton, IonButtons, IonIcon, IonChip, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
-import { gridOutline } from 'ionicons/icons';
+import { IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { gridOutline, squareOutline } from 'ionicons/icons';
 
 let cats = ref<any>(null);
 let size = ref<string>("12");
