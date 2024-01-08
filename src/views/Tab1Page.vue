@@ -27,24 +27,39 @@
       <div id="spinner_container" v-if="!cats">
         <ion-spinner></ion-spinner>
       </div>
-      <ion-button fill="outline">Outline</ion-button>
+      <ion-infinite-scroll @ionInfinite="ionInfinite">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { gridOutline, squareOutline } from 'ionicons/icons';
 
 let cats = ref<any>(null);
 let size = ref<string>("12");
+let offset = ref<number>(0);
 
 async function fetchData() {
   const response = await fetch('https://api.giphy.com/v1/gifs/trending?api_key=BK3RqadZSmCDUHeEbpuNbT17NoiNHbrR&limit=20&offset=0&rating=g&bundle=messaging_non_clips');
   const data = await response.json();
   cats.value = data;
 }
+
+async function infinityGif() {
+  offset.value += 20;
+  const response = await fetch('https://api.giphy.com/v1/gifs/trending?api_key=BK3RqadZSmCDUHeEbpuNbT17NoiNHbrR&limit=20&offset=' + offset.value + '&rating=g&bundle=messaging_non_clips');
+  const data = await response.json();
+  cats.value.data = [...cats.value.data, ...data.data];
+}
+
+const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
+  infinityGif();
+  setTimeout(() => ev.target.complete(), 500);
+};
 
 function changeColSize() {
   size.value = (size.value === "12") ? "6" : "12";
