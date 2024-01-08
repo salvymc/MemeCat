@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>🚀 MemeLand</ion-title>
+        <ion-title>🚀 MemeLand - Trend</ion-title>
         <ion-buttons slot="end">
           <ion-button @click="changeColSize()">
             <ion-icon slot="icon-only" :icon="size === '12' ? gridOutline : squareOutline"></ion-icon>
@@ -11,6 +11,9 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <ion-grid v-if="cats">
         <ion-row>
           <ion-col :size="size" size-sm="6" size-md="4" size-lg="3" v-for="item in cats['data']" :key="item.id">
@@ -36,7 +39,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { IonRefresher, IonRefresherContent, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { gridOutline, squareOutline } from 'ionicons/icons';
 
 let cats = ref<any>(null);
@@ -53,8 +56,17 @@ async function infinityGif() {
   offset.value += 20;
   const response = await fetch('https://api.giphy.com/v1/gifs/trending?api_key=BK3RqadZSmCDUHeEbpuNbT17NoiNHbrR&limit=20&offset=' + offset.value + '&rating=g&bundle=messaging_non_clips');
   const data = await response.json();
-  cats.value.data = [...cats.value.data, ...data.data];
+  if (offset.value <= data['pagination']['total_count']) {
+    cats.value.data = [...cats.value.data, ...data.data];
+  }
 }
+
+const handleRefresh = (event: CustomEvent) => {
+  setTimeout(() => {
+    fetchData();
+    event.target.complete();
+  }, 2000);
+};
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
   infinityGif();
