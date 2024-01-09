@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>🚀 MemeLand - Trend</ion-title>
+        <ion-title>🚀 MemeCat - Trend</ion-title>
         <ion-buttons slot="end">
           <ion-button @click="changeColSize()">
             <ion-icon slot="icon-only" :icon="size === '12' ? gridOutline : squareOutline"></ion-icon>
