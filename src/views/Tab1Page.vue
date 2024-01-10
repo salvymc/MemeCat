@@ -80,16 +80,16 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
 
 function changeColSize() {
   size.value = (size.value === "12") ? "6" : "12";
-}
+};
 
 function handleZoom(event: any) {
   imgZoom.value = event.target.src;
   isOpen.value = true;
-}
+};
 
 function onWillDismiss() {
   isOpen.value = false;
-}
+};
 
 onMounted(() => {
   fetchData();
