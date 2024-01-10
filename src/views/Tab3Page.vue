@@ -9,25 +9,44 @@
       </ion-toolbar>
     </ion-header>
     <ion-content v-if="category">
-      <ion-title>🔥 Categorie in voga</ion-title>
-      <ion-chip v-for="item in category['data']">{{ item }}</ion-chip>
+      <ion-text class="ion-text-center ion-margin-top ion-margin-bottom">
+        <h1>🔥Categorie in Voga</h1>
+      </ion-text>
+      <ion-chip @click="categoryPage()" v-for="item in category['data']">{{ item }}</ion-chip>
     </ion-content>
+    <div id="spinner_container" v-if="!category">
+      <ion-spinner></ion-spinner>
+    </div>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonChip } from '@ionic/vue';
+import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonChip, IonSpinner, useIonRouter, IonText } from '@ionic/vue';
 
 let category = ref<any>(null);
+const ionRouter = useIonRouter();
 
 async function fetchData() {
   const response = await fetch('https://api.giphy.com/v1/trending/searches?api_key=BK3RqadZSmCDUHeEbpuNbT17NoiNHbrR');
   const data = await response.json();
   category.value = data;
 }
-
+function categoryPage() {
+  ionRouter.push('/category_page/');
+}
 onMounted(() => {
   fetchData();
 })
+
 </script>
+
+<style>
+#spinner_container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+</style>
