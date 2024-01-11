@@ -12,7 +12,7 @@
       <ion-text class="ion-text-center ion-margin-top ion-margin-bottom">
         <h1>🔥Categorie in Voga</h1>
       </ion-text>
-      <ion-chip @click="categoryPage()" v-for="item in category['data']">{{ item }}</ion-chip>
+      <ion-chip @click="categoryPage($event)" v-for="item in category['data']">{{ item }}</ion-chip>
     </ion-content>
     <div id="spinner_container" v-if="!category">
       <ion-spinner></ion-spinner>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonChip, IonSpinner, useIonRouter, IonText } from '@ionic/vue';
+import { store } from '../js/store'
 
 let category = ref<any>(null);
 const ionRouter = useIonRouter();
@@ -32,9 +33,12 @@ async function fetchData() {
   const data = await response.json();
   category.value = data;
 }
-function categoryPage() {
+
+function categoryPage(event: any) {
+  store.category = event.target.innerHTML;
   ionRouter.push('/category_page/');
 }
+
 onMounted(() => {
   fetchData();
 })
@@ -48,5 +52,10 @@ onMounted(() => {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+}
+
+ion-spinner {
+  display: block;
+  margin: auto;
 }
 </style>
