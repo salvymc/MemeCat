@@ -39,5 +39,10 @@
 1.  Clone this repository `https://github.com/salvymc/MemeCat.git`
 2.  Enter in the project's folder: `cd MemeCat`
 3.  Run `npm install`
-4.  Run `ionic serve`
-5.  Access `http://localhost:8100` in your browser
+4.  Run `npm install -g @ionic/cli`
+5.  Run `ionic serve`
+6.  Access `http://localhost:8100` in your browser
+
+## 📦 Generate APK
+
+Run `ionic capacitor build android`
