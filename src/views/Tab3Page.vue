@@ -16,6 +16,10 @@
       <div id="spinner_container" v-if="!category">
         <ion-spinner></ion-spinner>
       </div>
+      <ion-item-divider></ion-item-divider>
+      <ion-text v-if="query.length >= 3" class="ion-text-center ion-margin-top ion-margin-bottom">
+        <h1>🔎Risultati per: {{ query }}</h1>
+      </ion-text>
       <ion-grid v-if="gifs">
         <ion-row>
           <ion-col size="6" size-sm="6" size-md="4" size-lg="3" v-for="item in gifs['data']" :key="item.id">
@@ -35,10 +39,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonChip, IonSpinner, useIonRouter, ionelem, IonText, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
+import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonChip, IonItemDivider, IonSpinner, useIonRouter, IonText, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
 import { store } from '../js/store'
 
 let category = ref<any>(null);
+let query = ref<string>("");
 let gifs = ref<any>(null);
 const ionRouter = useIonRouter();
 
@@ -60,11 +65,11 @@ function categoryPage(event: any) {
 }
 
 function handleInput(event: any) {
-  const query = event.target.value.toLowerCase();
-  if (query.length >= 3) {
-    getData(query);
+  query.value = event.target.value.toLowerCase();
+  if (query.value.length >= 3) {
+    getData(query.value);
   }
-  if (query.length == 0) {
+  if (query.value.length == 0) {
     gifs.value = null;
   }
 }
