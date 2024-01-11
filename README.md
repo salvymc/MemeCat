@@ -45,4 +45,4 @@
 
 ## 📦 Generate APK
 
-Run `ionic capacitor build android`
+- Run `ionic capacitor build android`
