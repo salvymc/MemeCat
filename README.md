@@ -32,7 +32,7 @@
 - [Ionic + Vue](https://ionicframework.com/vue)
 - [Capacitor](https://capacitorjs.com/)
 - [Vue](https://vuejs.org/)
-- [Giphy](https://developers.giphy.com/)
+- [Giphy API](https://developers.giphy.com/)
 
 ## ☄ Installing and Running
 
