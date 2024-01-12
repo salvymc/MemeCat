@@ -44,14 +44,16 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonModal, IonRefresher, IonRefresherContent, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { IonModal, IonRefresher, IonRefresherContent, IonInfiniteScroll, useIonRouter, useBackButton, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { gridOutline, squareOutline } from 'ionicons/icons';
+import { App } from '@capacitor/app';
 
 let cats = ref<any>(null);
 let size = ref<string>("12");
 let offset = ref<number>(0);
 let isOpen = ref<boolean>(false);
 let imgZoom = ref<string>("");
+const ionRouter = useIonRouter();
 
 async function fetchData() {
   const response = await fetch('https://api.giphy.com/v1/gifs/trending?api_key=BK3RqadZSmCDUHeEbpuNbT17NoiNHbrR&limit=20&offset=0&rating=g&bundle=messaging_non_clips');
@@ -90,6 +92,12 @@ function handleZoom(event: any) {
 function onWillDismiss() {
   isOpen.value = false;
 };
+
+useBackButton(-1, () => {
+  if (!ionRouter.canGoBack()) {
+    App.exitApp();
+  }
+});
 
 onMounted(() => {
   fetchData();
