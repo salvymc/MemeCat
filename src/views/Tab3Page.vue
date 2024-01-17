@@ -12,7 +12,7 @@
       <ion-text class="ion-text-center ion-margin-top ion-margin-bottom">
         <h1>🔥Categorie in Voga</h1>
       </ion-text>
-      <ion-chip @click="categoryPage($event)" v-for="item in category['data']">{{ item }}</ion-chip>
+      <ion-chip @click="categoryPage($event)" :outline="true" v-for="item in category['data']">{{ item }}</ion-chip>
       <div id="spinner_container" v-if="!category">
         <ion-spinner></ion-spinner>
       </div>
@@ -29,6 +29,13 @@
                 <ion-card-title>{{ item.username || 'MemeCat' }}</ion-card-title>
                 <ion-card-subtitle>{{ item.title || 'MemeCat' }}</ion-card-subtitle>
               </ion-card-header>
+              <ion-card-content>
+                <ion-button @click="shareImg(item['images']['fixed_width']['url'])" fill="outline"><ion-icon
+                    aria-hidden="true" fill="clear" size="meium" :icon="shareSocialOutline" /></ion-button>
+                <ion-button @click="saveImg(item.id, item.title || 'MemeCat', item['images']['fixed_width']['url'])"
+                  fill="outline" color="danger"><ion-icon aria-hidden="true" fill="clear" size="medium"
+                    :icon="heartHalfOutline" /></ion-button>
+              </ion-card-content>
             </ion-card>
           </ion-col>
         </ion-row>
@@ -39,7 +46,9 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonChip, IonItemDivider, IonSpinner, useIonRouter, IonText, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
+import { IonSearchbar, IonPage, IonHeader, IonIcon, IonToolbar, toastController, IonTitle, IonCardContent, IonContent, IonButton, IonChip, IonItemDivider, IonSpinner, useIonRouter, IonText, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
+import { shareSocialOutline, heartHalfOutline } from 'ionicons/icons';
+import { Share } from '@capacitor/share';
 import { store } from '../js/store'
 
 let category = ref<any>(null);
@@ -71,6 +80,42 @@ function handleInput(event: any) {
   }
   if (query.value.length == 0) {
     gifs.value = null;
+  }
+}
+async function shareImg(link: string) {
+  await Share.share({
+    url: link,
+  });
+}
+
+async function presentToast() {
+  const toast = await toastController.create({
+    message: 'Immagine aggiunta ai preferiti',
+    duration: 1500,
+    position: 'bottom',
+  })
+  await toast.present();
+};
+
+function saveImg(id: any, name: string, link: string) {
+  const request = indexedDB.open("MemeDB", 1);
+  request.onupgradeneeded = (event: any) => {
+    const db = event.target.result;
+    const store = db.createObjectStore("Meme", { keyPath: "id" });
+  }
+  request.onsuccess = (event: any) => {
+    const db = event.target.result;
+    const transaction = db.transaction(["Meme"], "readwrite");
+    const store = transaction.objectStore("Meme");
+    store.add({
+      id: id,
+      name: name,
+      link: link
+    });
+    transaction.oncomplete = () => {
+      db.close();
+      presentToast();
+    };
   }
 }
 

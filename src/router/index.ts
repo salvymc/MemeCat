@@ -24,6 +24,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Tab3Page.vue')
       },
       {
+        path: 'favourites',
+        component: () => import('@/views/Tab4Page.vue')
+      },
+      {
         path: 'category_page',
         component: () => import('@/views/CategoryPage.vue')
       }

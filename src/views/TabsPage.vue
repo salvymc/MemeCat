@@ -17,6 +17,11 @@
           <ion-icon aria-hidden="true" :icon="appsOutline" />
           <ion-label>Categorie</ion-label>
         </ion-tab-button>
+
+        <ion-tab-button tab="tab4" href="/favourites">
+          <ion-icon aria-hidden="true" :icon="heartOutline" />
+          <ion-label>Preferiti</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -24,5 +29,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { flameOutline, appsOutline, diceOutline } from 'ionicons/icons';
+import { flameOutline, appsOutline, diceOutline, heartOutline } from 'ionicons/icons';
 </script>
