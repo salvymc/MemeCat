@@ -14,6 +14,10 @@
               <ion-card-header>
                 <ion-card-subtitle>{{ item.name || 'MemeCat' }}</ion-card-subtitle>
               </ion-card-header>
+              <ion-card-content>
+                <ion-button @click="deleteFavourites(item.id)" fill="outline" color="danger"><ion-icon aria-hidden="true"
+                    fill="clear" size="meium" :icon="trashOutline" /></ion-button>
+              </ion-card-content>
             </ion-card>
           </ion-col>
         </ion-row>
@@ -22,15 +26,18 @@
     <div id="spinner_container" v-if="!gifs">
       <ion-spinner></ion-spinner>
     </div>
+    <div id="spinner_container" v-if="gifs.length === 0">
+      <img id="empty_gif" src="../theme/img/empty.gif">
+    </div>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonSearchbar, IonPage, IonHeader, IonIcon, IonToolbar, IonTitle, IonContent, IonSpinner, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardSubtitle } from '@ionic/vue';
-import { shareSocialOutline, heartOutline } from 'ionicons/icons';
+import { IonPage, IonHeader, IonIcon, IonToolbar, onIonViewDidEnter, IonTitle, IonCardContent, toastController, IonButton, IonContent, IonSpinner, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardSubtitle } from '@ionic/vue';
+import { trashOutline } from 'ionicons/icons';
 
-let gifs = ref<any>(null);
+let gifs = ref<any>([]);
 
 function getfavourites() {
   const request = indexedDB.open("MemeDB", 1);
@@ -47,10 +54,43 @@ function getfavourites() {
 
     objectStore.getAll().onsuccess = (event: any) => {
       gifs.value = event.target.result;
-      console.log(gifs);
     };
   };
 }
+
+async function presentToast() {
+  const toast = await toastController.create({
+    message: 'Immagine Eliminata',
+    duration: 1500,
+    position: 'bottom',
+  })
+  await toast.present();
+};
+
+async function deleteFavourites(id: any) {
+  const dbName = "MemeDB";
+  const objectStoreName = "Meme";
+
+  const request = indexedDB.open(dbName);
+
+  request.onsuccess = (event: any) => {
+    const db = request.result;
+
+    const transaction = db.transaction(objectStoreName, "readwrite");
+    const objectStore = transaction.objectStore(objectStoreName);
+
+    objectStore.delete(id);
+    console.log("Successfully deleted favourite item with ID:", id);
+
+    transaction.oncomplete;
+    db.close();
+    presentToast();
+    getfavourites();
+  }
+}
+onIonViewDidEnter(() => {
+  getfavourites();
+});
 
 onMounted(() => {
   getfavourites();
@@ -66,7 +106,8 @@ onMounted(() => {
   transform: translateY(-50%);
 }
 
-ion-spinner {
+ion-spinner,
+#empty_gif {
   display: block;
   margin: auto;
 }
