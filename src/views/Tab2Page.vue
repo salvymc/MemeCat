@@ -23,6 +23,13 @@
                 <ion-card-title>{{ item.username || 'MemeCat' }}</ion-card-title>
                 <ion-card-subtitle>{{ item.title || 'MemeCat' }}</ion-card-subtitle>
               </ion-card-header>
+              <ion-card-content>
+                <ion-button @click="shareImg(item['images']['fixed_width']['url'])" fill="outline"><ion-icon
+                    aria-hidden="true" fill="clear" size="meium" :icon="shareSocialOutline" /></ion-button>
+                <ion-button @click="saveImg(item.id, item.title || 'MemeCat', item['images']['fixed_width']['url'])"
+                  fill="outline" color="danger"><ion-icon aria-hidden="true" fill="clear" size="medium"
+                    :icon="heartHalfOutline" /></ion-button>
+              </ion-card-content>
             </ion-card>
           </ion-col>
         </ion-row>
@@ -44,8 +51,10 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonModal, IonRefresher, IonRefresherContent, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
-import { gridOutline, squareOutline } from 'ionicons/icons';
+import { IonModal, IonRefresher, IonRefresherContent, toastController, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonSpinner, IonButton, IonButtons, IonIcon, IonCol, IonGrid, IonRow, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { gridOutline, squareOutline, heartHalfOutline, shareSocialOutline } from 'ionicons/icons';
+import { Share } from '@capacitor/share';
+
 
 let cats = ref<any>(null);
 let size = ref<string>("12");
@@ -89,6 +98,43 @@ function handleZoom(event: any) {
 
 function onWillDismiss() {
   isOpen.value = false;
+}
+
+async function shareImg(link: string) {
+  await Share.share({
+    url: link,
+  });
+}
+
+async function presentToast() {
+  const toast = await toastController.create({
+    message: 'Immagine aggiunta ai preferiti',
+    duration: 1500,
+    position: 'bottom',
+  })
+  await toast.present();
+};
+
+function saveImg(id: any, name: string, link: string) {
+  const request = indexedDB.open("MemeDB", 1);
+  request.onupgradeneeded = (event: any) => {
+    const db = event.target.result;
+    const store = db.createObjectStore("Meme", { keyPath: "id" });
+  }
+  request.onsuccess = (event: any) => {
+    const db = event.target.result;
+    const transaction = db.transaction(["Meme"], "readwrite");
+    const store = transaction.objectStore("Meme");
+    store.add({
+      id: id,
+      name: name,
+      link: link
+    });
+    transaction.oncomplete = () => {
+      db.close();
+      presentToast();
+    };
+  }
 }
 
 onMounted(() => {

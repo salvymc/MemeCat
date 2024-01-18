@@ -15,6 +15,8 @@
                 <ion-card-subtitle>{{ item.name || 'MemeCat' }}</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content>
+                <ion-button @click="shareImg(item.link)" fill="outline"><ion-icon aria-hidden="true" fill="clear"
+                    size="meium" :icon="shareSocialOutline" /></ion-button>
                 <ion-button @click="deleteFavourites(item.id)" fill="outline" color="danger"><ion-icon aria-hidden="true"
                     fill="clear" size="meium" :icon="trashOutline" /></ion-button>
               </ion-card-content>
@@ -35,7 +37,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { IonPage, IonHeader, IonIcon, IonToolbar, onIonViewDidEnter, IonTitle, IonCardContent, toastController, IonButton, IonContent, IonSpinner, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardSubtitle } from '@ionic/vue';
-import { trashOutline } from 'ionicons/icons';
+import { trashOutline, shareSocialOutline } from 'ionicons/icons';
+import { Share } from '@capacitor/share';
+
 
 let gifs = ref<any>([]);
 
@@ -56,6 +60,12 @@ function getfavourites() {
       gifs.value = event.target.result;
     };
   };
+}
+
+async function shareImg(link: string) {
+  await Share.share({
+    url: link,
+  });
 }
 
 async function presentToast() {
